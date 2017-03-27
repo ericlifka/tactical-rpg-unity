@@ -11,26 +11,20 @@ public class LevelLoader : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		
-//		GameObject tile = Instantiate (tilePrefab);
-//		tile.transform.position = new Vector2 (0, 0);
-//		tile.transform.localScale = new Vector2 (0.05F, 0.05F);
-//
-//		GameObject tile2 = Instantiate (tilePrefab);
-//		tile2.transform.position = new Vector2 (1, 1);
-//		tile2.transform.localScale = new Vector2 (0.05F, 0.05F);
-
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 3; j++) {
 
 				GameObject tile = Instantiate (tilePrefab);
-				tile.transform.position = new Vector2 ((tileSpacing) * i, (tileSpacing) * j);
+				tile.transform.position = new Vector2 (tileSpacing * i, tileSpacing * j);
 				tile.transform.localScale = new Vector2 (0.1F, 0.1F);
-
 			}
 		}
 
 		GameObject[] tiles = GameObject.FindGameObjectsWithTag("LevelTile");
 		Debug.Log ("tiles:" + tiles.Length);
+
+		TileActiveStateManager state = tiles [0].GetComponent<TileActiveStateManager> ();
+		state.switchToActive ();
 	}
 	
 	// Update is called once per frame
