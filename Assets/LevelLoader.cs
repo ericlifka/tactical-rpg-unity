@@ -5,6 +5,9 @@ using UnityEngine;
 public class LevelLoader : MonoBehaviour {
 	public GameObject tilePrefab;
 
+	private float tileScale = 0.1F;
+	private float tileSpacing = 2.1F;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -20,11 +23,14 @@ public class LevelLoader : MonoBehaviour {
 			for (int j = 0; j < 3; j++) {
 
 				GameObject tile = Instantiate (tilePrefab);
-				tile.transform.position = new Vector2 (i, j);
-				tile.transform.localScale = new Vector2 (0.05F, 0.05F);
+				tile.transform.position = new Vector2 ((tileSpacing) * i, (tileSpacing) * j);
+				tile.transform.localScale = new Vector2 (0.1F, 0.1F);
 
 			}
 		}
+
+		GameObject[] tiles = GameObject.FindGameObjectsWithTag("LevelTile");
+		Debug.Log ("tiles:" + tiles.Length);
 	}
 	
 	// Update is called once per frame
