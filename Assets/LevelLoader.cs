@@ -47,27 +47,35 @@ public class LevelLoader : MonoBehaviour {
 
 		} else if (inputReleased && valueX < 0 && activeX > 0) {
 			inputReleased = false;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			inactivate (activeX, activeY);
 			activeX--;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+			activate (activeX, activeY);
 
 		} else if (inputReleased && valueY < 0 && activeY > 0) {
 			inputReleased = false;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			inactivate (activeX, activeY);
 			activeY--;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+			activate (activeX, activeY);
 
 		} else if (inputReleased && valueX > 0 && activeX < gridWidth-1) {
 			inputReleased = false;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			inactivate (activeX, activeY);
 			activeX++;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+			activate (activeX, activeY);
 
 		} else if (inputReleased && valueY > 0 && activeY < gridHeight-1) {
 			inputReleased = false;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			inactivate (activeX, activeY);
 			activeY++;
-			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+			activate (activeX, activeY);
 		}
+	}
+
+	private void inactivate(int x, int y) {
+		tiles [x, y].GetComponent<TileActiveStateManager> ().switchToInactive ();
+	}
+
+	private void activate(int x, int y) {
+		tiles [x, y].GetComponent<TileActiveStateManager> ().switchToActive ();
 	}
 }
