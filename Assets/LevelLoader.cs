@@ -8,6 +8,11 @@ public class LevelLoader : MonoBehaviour {
 	private float tileScale = 0.1F;
 	private float tileSpacing = 2.1F;
 
+	private GameObject[] tiles;
+	private int activeTile = 0;
+
+	private bool inputReleased = true;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -20,15 +25,29 @@ public class LevelLoader : MonoBehaviour {
 			}
 		}
 
-		GameObject[] tiles = GameObject.FindGameObjectsWithTag("LevelTile");
+		tiles = GameObject.FindGameObjectsWithTag("LevelTile");
 		Debug.Log ("tiles:" + tiles.Length);
 
-		TileActiveStateManager state = tiles [0].GetComponent<TileActiveStateManager> ();
+		TileActiveStateManager state = tiles [activeTile].GetComponent<TileActiveStateManager> ();
 		state.switchToActive ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		float value = Input.GetAxis ("Horizontal");
+
+		if (!inputReleased && value == 0) {
+			inputReleased = true;
+		} else if (inputReleased && value < 0 && activeTile > 0) {
+			inputReleased = false;
+			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			activeTile--;
+			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToActive ();
+		} else if (inputReleased && value > 0 && activeTile < tiles.Length-1) {
+			inputReleased = false;
+			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			activeTile++;
+			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToActive ();
+		}
 	}
 }

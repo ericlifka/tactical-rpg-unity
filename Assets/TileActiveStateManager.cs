@@ -21,4 +21,8 @@ public class TileActiveStateManager : MonoBehaviour {
 	public void switchToActive() {
 		spriteRenderer.sprite = activeSprite;
 	}
+
+	public void switchToInactive() {
+		spriteRenderer.sprite = inactiveSprite;
+	}
 }
