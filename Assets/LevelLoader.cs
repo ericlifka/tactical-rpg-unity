@@ -8,46 +8,66 @@ public class LevelLoader : MonoBehaviour {
 	private float tileScale = 0.1F;
 	private float tileSpacing = 2.1F;
 
-	private GameObject[] tiles;
-	private int activeTile = 0;
+	private GameObject[,] tiles;
+	private int gridWidth = 5;
+	private int gridHeight = 3;
+	private int activeX = 0;
+	private int activeY = 0;
 
 	private bool inputReleased = true;
 
-	// Use this for initialization
 	void Start () {
-		
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 3; j++) {
+		tiles = new GameObject[gridWidth, gridHeight];
+
+		for (int x = 0; x < gridWidth; x++) {
+			for (int y = 0; y < gridHeight; y++) {
 
 				GameObject tile = Instantiate (tilePrefab);
-				tile.transform.position = new Vector2 (tileSpacing * i, tileSpacing * j);
+				tile.transform.position = new Vector2 (tileSpacing * x, tileSpacing * y);
 				tile.transform.localScale = new Vector2 (0.1F, 0.1F);
+
+				tiles [x, y] = tile;
 			}
 		}
+//
+//		tiles = GameObject.FindGameObjectsWithTag("LevelTile");
+//		Debug.Log ("tiles:" + tiles.Length);
 
-		tiles = GameObject.FindGameObjectsWithTag("LevelTile");
-		Debug.Log ("tiles:" + tiles.Length);
-
-		TileActiveStateManager state = tiles [activeTile].GetComponent<TileActiveStateManager> ();
+		TileActiveStateManager state = tiles [activeX, activeY].GetComponent<TileActiveStateManager> ();
 		state.switchToActive ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		float value = Input.GetAxis ("Horizontal");
+		float valueX = Input.GetAxis ("Horizontal");
+		float valueY = Input.GetAxis ("Vertical");
 
-		if (!inputReleased && value == 0) {
+		if (!inputReleased && valueX == 0 && valueY == 0) {
 			inputReleased = true;
-		} else if (inputReleased && value < 0 && activeTile > 0) {
+
+		} else if (inputReleased && valueX < 0 && activeX > 0) {
 			inputReleased = false;
-			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToInactive ();
-			activeTile--;
-			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToActive ();
-		} else if (inputReleased && value > 0 && activeTile < tiles.Length-1) {
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			activeX--;
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+
+		} else if (inputReleased && valueY < 0 && activeY > 0) {
 			inputReleased = false;
-			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToInactive ();
-			activeTile++;
-			tiles [activeTile].GetComponent<TileActiveStateManager> ().switchToActive ();
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			activeY--;
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+
+		} else if (inputReleased && valueX > 0 && activeX < gridWidth-1) {
+			inputReleased = false;
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			activeX++;
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
+
+		} else if (inputReleased && valueY > 0 && activeY < gridHeight-1) {
+			inputReleased = false;
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToInactive ();
+			activeY++;
+			tiles [activeX, activeY].GetComponent<TileActiveStateManager> ().switchToActive ();
 		}
 	}
 }
