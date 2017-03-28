@@ -10,8 +10,8 @@ public class LevelLoader : MonoBehaviour {
 	private float tileSpacing = 2.1F;
 
 	private GameObject[,] tiles;
-	private int gridWidth = 5;
-	private int gridHeight = 3;
+	private int gridWidth = 9;
+	private int gridHeight = 5;
 	private int activeX = 0;
 	private int activeY = 0;
 
@@ -30,12 +30,10 @@ public class LevelLoader : MonoBehaviour {
 				tiles [x, y] = tile;
 			}
 		}
-//
-//		tiles = GameObject.FindGameObjectsWithTag("LevelTile");
-//		Debug.Log ("tiles:" + tiles.Length);
 
-		TileActiveStateManager state = tiles [activeX, activeY].GetComponent<TileActiveStateManager> ();
-		state.switchToActive ();
+		activeX = gridWidth / 2;
+		activeY = gridHeight / 2;
+		switchActiveTile(tiles[activeX, activeY], null);
 	}
 	
 	// Update is called once per frame
@@ -76,14 +74,16 @@ public class LevelLoader : MonoBehaviour {
 	}
 
 	private void switchActiveTile(GameObject newActive, GameObject oldActive) {
-		oldActive.GetComponent<TileActiveStateManager> ().switchToInactive ();
-		newActive.GetComponent<TileActiveStateManager> ().switchToActive ();
+		if (oldActive) {
+			oldActive.GetComponent<TileActiveStateManager> ().switchToInactive ();
+		}
+		if (newActive) {
+			newActive.GetComponent<TileActiveStateManager> ().switchToActive ();
 
-		Debug.Log (newActive.transform.position);
-		Debug.Log (camera.transform.position);
-		Vector3 newPosition = new Vector3 (newActive.transform.position.x, newActive.transform.position.y, camera.transform.position.z);
+			Vector3 newPosition = new Vector3 (newActive.transform.position.x, newActive.transform.position.y, camera.transform.position.z);
 
 //		camera.transform.position = Vector3.Lerp (camera.transform.position, newPosition, 1.0f);
-		camera.transform.position = newPosition;
+			camera.transform.position = newPosition;
+		}
 	}
 }
