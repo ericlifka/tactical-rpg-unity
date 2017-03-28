@@ -6,6 +6,8 @@ public class LevelLoader : MonoBehaviour {
 	public GameObject tilePrefab;
 	public Camera camera;
 
+	private TrackCameraToActiveTile cameraTracker;
+
 	private float tileScale = 0.1F;
 	private float tileSpacing = 2.1F;
 
@@ -17,17 +19,19 @@ public class LevelLoader : MonoBehaviour {
 
 	private bool inputReleased = true;
 
-	void Start () {
+	void Start() {
+		cameraTracker = camera.GetComponent<TrackCameraToActiveTile>();
+
 		tiles = new GameObject[gridWidth, gridHeight];
 
 		for (int x = 0; x < gridWidth; x++) {
 			for (int y = 0; y < gridHeight; y++) {
 
-				GameObject tile = Instantiate (tilePrefab);
-				tile.transform.position = new Vector2 (tileSpacing * x, tileSpacing * y);
-				tile.transform.localScale = new Vector2 (0.1F, 0.1F);
+				GameObject tile = Instantiate(tilePrefab);
+				tile.transform.position = new Vector2(tileSpacing * x, tileSpacing * y);
+				tile.transform.localScale = new Vector2(0.1F, 0.1F);
 
-				tiles [x, y] = tile;
+				tiles[x, y] = tile;
 			}
 		}
 
@@ -37,53 +41,56 @@ public class LevelLoader : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		float valueX = Input.GetAxis ("Horizontal");
-		float valueY = Input.GetAxis ("Vertical");
+	void Update() {
+		float valueX = Input.GetAxis("Horizontal");
+		float valueY = Input.GetAxis("Vertical");
 
-		GameObject currentActive = tiles [activeX, activeY];
+		GameObject currentActive = tiles[activeX, activeY];
 		GameObject newActive = null;
 
 		if (!inputReleased && valueX == 0 && valueY == 0) {
 			inputReleased = true;
 
-		} else if (inputReleased && valueX < 0 && activeX > 0) {
+		}
+		else if (inputReleased && valueX < 0 && activeX > 0) {
 			inputReleased = false;
 			activeX--;
-			newActive = tiles [activeX, activeY];
+			newActive = tiles[activeX, activeY];
 
-		} else if (inputReleased && valueY < 0 && activeY > 0) {
+		}
+		else if (inputReleased && valueY < 0 && activeY > 0) {
 			inputReleased = false;
 			activeY--;
-			newActive = tiles [activeX, activeY];
+			newActive = tiles[activeX, activeY];
 
-		} else if (inputReleased && valueX > 0 && activeX < gridWidth-1) {
+		}
+		else if (inputReleased && valueX > 0 && activeX < gridWidth - 1) {
 			inputReleased = false;
 			activeX++;
-			newActive = tiles [activeX, activeY];
+			newActive = tiles[activeX, activeY];
 
-		} else if (inputReleased && valueY > 0 && activeY < gridHeight-1) {
+		}
+		else if (inputReleased && valueY > 0 && activeY < gridHeight - 1) {
 			inputReleased = false;
 			activeY++;
-			newActive = tiles [activeX, activeY];
+			newActive = tiles[activeX, activeY];
 		}
 
 		if (newActive && newActive != currentActive) {
-			switchActiveTile (newActive, currentActive);
+			switchActiveTile(newActive, currentActive);
 		}
 	}
 
 	private void switchActiveTile(GameObject newActive, GameObject oldActive) {
 		if (oldActive) {
-			oldActive.GetComponent<TileActiveStateManager> ().switchToInactive ();
+			oldActive.GetComponent<TileActiveStateManager>().switchToInactive();
 		}
+
 		if (newActive) {
-			newActive.GetComponent<TileActiveStateManager> ().switchToActive ();
+			newActive.GetComponent<TileActiveStateManager>().switchToActive();
 
-			Vector3 newPosition = new Vector3 (newActive.transform.position.x, newActive.transform.position.y, camera.transform.position.z);
-
-//		camera.transform.position = Vector3.Lerp (camera.transform.position, newPosition, 1.0f);
-			camera.transform.position = newPosition;
+			cameraTracker.trackToPosition(newActive.transform.position);
 		}
 	}
 }
+	

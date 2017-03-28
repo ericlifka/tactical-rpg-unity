@@ -9,12 +9,12 @@ public class TileActiveStateManager : MonoBehaviour {
 
 	private SpriteRenderer spriteRenderer;
 
-	void Awake () {
-		spriteRenderer = GetComponent<SpriteRenderer> ();
+	void Awake() {
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		spriteRenderer.sprite = inactiveSprite;
 	}
 
-	void Update () {
+	void Update() {
 		
 	}
 
