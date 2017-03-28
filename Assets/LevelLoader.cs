@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LevelLoader : MonoBehaviour {
 	public GameObject tilePrefab;
+	public Camera camera;
 
 	private float tileScale = 0.1F;
 	private float tileSpacing = 2.1F;
@@ -42,40 +43,47 @@ public class LevelLoader : MonoBehaviour {
 		float valueX = Input.GetAxis ("Horizontal");
 		float valueY = Input.GetAxis ("Vertical");
 
+		GameObject currentActive = tiles [activeX, activeY];
+		GameObject newActive = null;
+
 		if (!inputReleased && valueX == 0 && valueY == 0) {
 			inputReleased = true;
 
 		} else if (inputReleased && valueX < 0 && activeX > 0) {
 			inputReleased = false;
-			inactivate (activeX, activeY);
 			activeX--;
-			activate (activeX, activeY);
+			newActive = tiles [activeX, activeY];
 
 		} else if (inputReleased && valueY < 0 && activeY > 0) {
 			inputReleased = false;
-			inactivate (activeX, activeY);
 			activeY--;
-			activate (activeX, activeY);
+			newActive = tiles [activeX, activeY];
 
 		} else if (inputReleased && valueX > 0 && activeX < gridWidth-1) {
 			inputReleased = false;
-			inactivate (activeX, activeY);
 			activeX++;
-			activate (activeX, activeY);
+			newActive = tiles [activeX, activeY];
 
 		} else if (inputReleased && valueY > 0 && activeY < gridHeight-1) {
 			inputReleased = false;
-			inactivate (activeX, activeY);
 			activeY++;
-			activate (activeX, activeY);
+			newActive = tiles [activeX, activeY];
+		}
+
+		if (newActive && newActive != currentActive) {
+			switchActiveTile (newActive, currentActive);
 		}
 	}
 
-	private void inactivate(int x, int y) {
-		tiles [x, y].GetComponent<TileActiveStateManager> ().switchToInactive ();
-	}
+	private void switchActiveTile(GameObject newActive, GameObject oldActive) {
+		oldActive.GetComponent<TileActiveStateManager> ().switchToInactive ();
+		newActive.GetComponent<TileActiveStateManager> ().switchToActive ();
 
-	private void activate(int x, int y) {
-		tiles [x, y].GetComponent<TileActiveStateManager> ().switchToActive ();
+		Debug.Log (newActive.transform.position);
+		Debug.Log (camera.transform.position);
+		Vector3 newPosition = new Vector3 (newActive.transform.position.x, newActive.transform.position.y, camera.transform.position.z);
+
+//		camera.transform.position = Vector3.Lerp (camera.transform.position, newPosition, 1.0f);
+		camera.transform.position = newPosition;
 	}
 }
