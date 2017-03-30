@@ -4,27 +4,38 @@ using UnityEngine;
 
 public class TrackCameraToActiveTile : MonoBehaviour {
 
-	// Use this for initialization
+	public Vector3 startMarker;
+	public Vector3 endMarker;
+
+	private float speed = 10.0F;
+
+	private float startTime;
+	private float journeyLength;
+
 	void Start() {
 		
 	}
-	
-	// Update is called once per frame
+
 	void Update() {
-		
+		if (startTime == null) {
+			return;
+		}
+
+		float distCovered = (Time.time - startTime) * speed;
+		float fracJourney = distCovered / journeyLength;
+
+		transform.position = Vector3.Lerp(startMarker, endMarker, fracJourney);
 	}
 
 	public void trackToPosition(Vector2 newPosition) {
-		Vector3 newCameraPosition = new Vector3(
-			                            newPosition.x,
-			                            newPosition.y,
-			                            transform.position.z
-		                            );
+		startTime = Time.time;
+		startMarker = transform.position;
+		endMarker = new Vector3(
+			newPosition.x,
+			newPosition.y,
+			transform.position.z
+		);
 
-		transform.position = newCameraPosition;
-
-
-		//		camera.transform.position = Vector3.Lerp (camera.transform.position, newPosition, 1.0f);
-		//			camera.transform.position = newPosition;
+		journeyLength = Vector3.Distance(startMarker, endMarker);
 	}
 }
