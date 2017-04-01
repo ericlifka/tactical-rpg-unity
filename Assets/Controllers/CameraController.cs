@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrackCameraToActiveTile : MonoBehaviour {
+public class CameraController : MonoBehaviour {
 
 	public Vector3 startMarker;
 	public Vector3 endMarker;

@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Main : MonoBehaviour {
 	public GameObject tilePrefab;
-	public Camera camera;
+	public CameraController camera;
 	public LevelLoader levelLoader;
 	public CursorController cursor;
-
-	private TrackCameraToActiveTile cameraTracker;
 
 	private float tileScale = 0.1F;
 	private float tileSpacing = 2.1F;
@@ -22,7 +20,6 @@ public class Main : MonoBehaviour {
 	private bool inputReleased = true;
 
 	void Start() {
-		cameraTracker = camera.GetComponent<TrackCameraToActiveTile>();
 		cursor.setup(tileSpacing);
 
 		tiles = new GameObject[gridWidth, gridHeight];
@@ -92,7 +89,7 @@ public class Main : MonoBehaviour {
 		if (newActive) {
 			newActive.GetComponent<TileController>().switchToActive();
 
-			cameraTracker.trackToPosition(newActive.transform.position);
+			camera.trackToPosition(newActive.transform.position);
 			cursor.moveToTile(newActive);
 		}
 	}
