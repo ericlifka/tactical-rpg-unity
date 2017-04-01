@@ -86,11 +86,11 @@ public class Main : MonoBehaviour {
 
 	private void switchActiveTile(GameObject newActive, GameObject oldActive) {
 		if (oldActive) {
-			oldActive.GetComponent<TileActiveStateManager>().switchToInactive();
+			oldActive.GetComponent<TileController>().switchToInactive();
 		}
 
 		if (newActive) {
-			newActive.GetComponent<TileActiveStateManager>().switchToActive();
+			newActive.GetComponent<TileController>().switchToActive();
 
 			cameraTracker.trackToPosition(newActive.transform.position);
 			cursor.moveToTile(newActive);

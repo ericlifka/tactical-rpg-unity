@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileActiveStateManager : MonoBehaviour {
-
+public class TileController : MonoBehaviour {
 	public Sprite inactiveSprite;
 	public Sprite activeSprite;
 
@@ -15,7 +14,7 @@ public class TileActiveStateManager : MonoBehaviour {
 	}
 
 	void Update() {
-		
+
 	}
 
 	public void switchToActive() {
