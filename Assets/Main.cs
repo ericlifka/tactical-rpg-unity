@@ -29,7 +29,7 @@ public class Main : MonoBehaviour {
 
 				GameObject tile = Instantiate(tilePrefab);
 				tile.transform.position = new Vector2(tileSpacing * x, tileSpacing * y);
-				tile.transform.localScale = new Vector2(0.1F, 0.1F);
+				tile.transform.localScale = new Vector2(tileScale, tileScale);
 
 				tiles[x, y] = tile;
 			}
@@ -37,7 +37,9 @@ public class Main : MonoBehaviour {
 
 		activeX = gridWidth / 2;
 		activeY = gridHeight / 2;
-		switchActiveTile(tiles[activeX, activeY], null);
+
+		camera.moveToPosition(tiles[activeX, activeY].transform.position);
+		cursor.moveToTile(tiles[activeX, activeY]);
 	}
 
 	// Update is called once per frame

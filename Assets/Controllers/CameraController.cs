@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour {
 
 	private float speed = 10.0F;
 
-	private float startTime;
+	private float startTime = -1;
 	private float journeyLength;
 
 	void Start() {
@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (startTime == null) {
+		if (startTime < 0) {
 			return;
 		}
 
@@ -25,9 +25,13 @@ public class CameraController : MonoBehaviour {
 		float fracJourney = distCovered / journeyLength;
 
 		transform.position = Vector3.Lerp(startMarker, endMarker, fracJourney);
+
+		if (fracJourney >= 1.0) {
+			startTime = -1;
+		}
 	}
 
-	public void trackToPosition(Vector2 newPosition) {
+	public void trackToPosition(Vector3 newPosition) {
 		startTime = Time.time;
 		startMarker = transform.position;
 		endMarker = new Vector3(
@@ -37,5 +41,13 @@ public class CameraController : MonoBehaviour {
 		);
 
 		journeyLength = Vector3.Distance(startMarker, endMarker);
+	}
+
+	public void moveToPosition(Vector3 newPosition) {
+		startTime = -1;
+		transform.position = new Vector3(
+			newPosition.x,
+			newPosition.y,
+			transform.position.z);
 	}
 }
