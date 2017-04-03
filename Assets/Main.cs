@@ -15,12 +15,8 @@ public class Main : MonoBehaviour {
 	private float tileSpacing = 2.1F;
 
 	private GameObject[,] tiles;
-//	private int gridWidth = 9;
-//	private int gridHeight = 5;
-//	private int activeX = 0;
-//	private int activeY = 0;
-	private Vector2 mapDimensions = new Vector2(9, 5);
-	private Vector2 active;
+	private Coord mapDimensions = new Coord(9, 5);
+	private Coord active;
 
 	private bool inputReleased = true;
 
@@ -40,7 +36,7 @@ public class Main : MonoBehaviour {
 			}
 		}
 
-		active = new Vector2(mapDimensions.x / 2, mapDimensions.y / 2);
+		active = new Coord(mapDimensions.x / 2, mapDimensions.y / 2);
 
 		cameraController.moveToPosition(getActiveTile().transform.position);
 		cursorController.moveToTile(getActiveTile());
@@ -62,7 +58,7 @@ public class Main : MonoBehaviour {
 			return;
 		}
 
-		Vector2 newActive = new Vector2(active.x, active.y);
+		Coord newActive = new Coord(active.x, active.y);
 		if (xInput < -0.5 && newActive.x > 0) {
 			newActive.x--;
 		}
@@ -77,6 +73,7 @@ public class Main : MonoBehaviour {
 		}
 
 		if (newActive.y != active.y || newActive.x != active.x) {
+			inputReleased = false;
 			active = newActive;
 
 			GameObject tile = getActiveTile();
@@ -86,60 +83,6 @@ public class Main : MonoBehaviour {
 	}
 
 	private GameObject getActiveTile() {
-		return tiles[(int) active.x, (int) active.y];
+		return tiles[active.x, active.y];
 	}
-
-//	// Update is called once per frame
-//	void Update2() {
-//		float valueX = Input.GetAxis("Horizontal");
-//		float valueY = Input.GetAxis("Vertical");
-//
-//		GameObject currentActive = tiles[activeX, activeY];
-//		GameObject newActive = null;
-//
-//		if (!inputReleased && valueX == 0 && valueY == 0) {
-//			inputReleased = true;
-//
-//		}
-//		else if (inputReleased && valueX < 0 && activeX > 0) {
-//			inputReleased = false;
-//			activeX--;
-//			newActive = tiles[activeX, activeY];
-//
-//		}
-//		else if (inputReleased && valueY < 0 && activeY > 0) {
-//			inputReleased = false;
-//			activeY--;
-//			newActive = tiles[activeX, activeY];
-//
-//		}
-//		else if (inputReleased && valueX > 0 && activeX < gridWidth - 1) {
-//			inputReleased = false;
-//			activeX++;
-//			newActive = tiles[activeX, activeY];
-//
-//		}
-//		else if (inputReleased && valueY > 0 && activeY < gridHeight - 1) {
-//			inputReleased = false;
-//			activeY++;
-//			newActive = tiles[activeX, activeY];
-//		}
-//
-//		if (newActive && newActive != currentActive) {
-//			switchActiveTile(newActive, currentActive);
-//		}
-//	}
-//
-//	private void switchActiveTile(GameObject newActive, GameObject oldActive) {
-//		if (oldActive) {
-//			oldActive.GetComponent<TileController>().switchToInactive();
-//		}
-//
-//		if (newActive) {
-//			newActive.GetComponent<TileController>().switchToActive();
-//
-//			camera.trackToPosition(newActive.transform.position);
-//			cursor.moveToTile(newActive);
-//		}
-//	}
 }
